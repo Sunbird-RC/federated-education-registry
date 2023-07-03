@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { GeneralService } from 'src/app/services/general/general.service';
@@ -10,7 +10,7 @@ import { AppConfig } from 'src/app/app.config';
   templateUrl: './get-records.component.html',
   styleUrls: ['./get-records.component.scss']
 })
-export class GetRecordsComponent implements OnInit {
+export class GetRecordsComponent implements OnInit, OnChanges {
   item:any;
   recordItems: any;
   vcOsid: any;
@@ -42,17 +42,21 @@ export class GetRecordsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-this.getRecords();
+    this.getRecords();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.getRecords();
   }
 
   getRecords(){
     let payout = {
       "filters": {}
-  }
+    }
     this.generalService.postData('/' + this.documentName + '/search', payout).subscribe((res) => {
-    console.log(res);
-    this.recordItems = res;
-    
+      console.log(res);
+      this.recordItems = res;
+      
     }, err=>{
       this.recordItems = [];
       console.log(err);
